@@ -3,7 +3,7 @@ section .text
 
 _start:
     ; Writing the name 'Dara Ali'
-    mov rdx, 9                ; Message length
+    mov rdx, 8              ; Message length
     mov rsi, name             ; Pointer to message
     mov rdi, 1                ; File descriptor (stdout)
     mov rax, 1                ; System call number (sys_write)
@@ -25,4 +25,4 @@ _start:
     syscall                   ; Call kernel
 
 section .data
-    name db 'Dara Ali ', 0    ; Null-terminated string
+    name db 'Dara Ali', 0    ; Null-terminated string
