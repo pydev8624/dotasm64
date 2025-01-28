@@ -1,3 +1,7 @@
+; nasm -f elf64 code.asm -o code.o
+; ld code.o -o code
+; ./code
+
 ; code1
 section .data
     message db "Hello, World!", 0xA ; String to print with a newline
