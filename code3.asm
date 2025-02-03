@@ -26,3 +26,4 @@ _start:
 
 section .data
     name db 'Dara Ali', 0    ; Null-terminated string
+    ;  message_len equ $ - message
