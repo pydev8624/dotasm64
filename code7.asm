@@ -2,18 +2,23 @@ section .bss
     buffer resb 20  ; Reserve space for string conversion
 
 section .data
-    x dq 5          ; Declare and initialize x with 5
+    num dq 10          ; Declare and initialize x with 5
     newline db 10   ; Newline character
 
 section .text
     global _start
 
 _start:
-    ; Increment x
-    inc qword [x]
+    ; Increment num
+    ;inc qword [num]
+    
+    mov rax,[num]
+    ; increment rax
+    inc rax
+    mov [num],rax
 
-    ; Convert x to string
-    mov rax, [x]    ; Load x into RAX
+    ; Convert num to string
+    mov rax, [num]    ; Load x into RAX
     mov rdi, buffer ; Set destination buffer
     call int_to_str ; Convert integer to string
 
