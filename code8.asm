@@ -6,6 +6,7 @@ section .text
 _start:
     mov rax, [num]
     inc rax
+    ;dec rax
 
 ; Exit program
     mov rax, 60     ; syscall: exit
