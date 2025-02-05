@@ -1,27 +1,61 @@
-section .data
-    ; Data section to hold variables
-    num1 dq -1          ; Declare num1 with value -1 (64-bit signed integer)
-    num2 dq 3           ; Declare num2 with value 3 (64-bit signed integer)
-
 section .bss
-    ; Uninitialized data section
-    result resq 1       ; Reserve space for the result (64-bit)
+    buffer resb 20  ; Reserve space for string conversion
+
+section .data
+    x dq 5          ; Declare and initialize x with 5
+    newline db 10   ; Newline character
 
 section .text
-    global _start       ; Entry point for the program
+    global _start
 
 _start:
-    ; Load values into registers
-    mov rax, [num1]     ; Load the value of num1 into RAX
-    mov rbx, [num2]     ; Load the value of num2 into RBX
+    ; Increment x
+    inc qword [x]
 
-    ; Perform addition
-    add rax, rbx        ; Add RBX to RAX (result stored in RAX)
+    ; Convert x to string
+    mov rax, [x]    ; Load x into RAX
+    mov rdi, buffer ; Set destination buffer
+    call int_to_str ; Convert integer to string
 
-    ; Store the result in memory
-    mov [result], rax   ; Store the result in the reserved space
+    ; Print the result
+    mov rsi, buffer ; String address
+    mov rdx, 20     ; Max length
+    call print_str  ; Print string
 
-    ; Exit the program
-    mov rax, 60         ; Syscall number for exit
-    xor rdi, rdi        ; Exit code 0
-    syscall             ; Perform the syscall
+    ; Print newline
+    mov rsi, newline
+    mov rdx, 1
+    call print_str
+
+    ; Exit program
+    mov rax, 60     ; syscall: exit
+    xor rdi, rdi    ; status 0
+    syscall
+
+; Convert integer in RAX to string at RDI
+int_to_str:
+    mov rbx, 10     ; Divisor for base 10
+    mov rcx, 0      ; Counter
+    mov r8, rdi     ; Save buffer pointer
+
+.reverse:
+    xor rdx, rdx    ; Clear RDX for division
+    div rbx         ; RAX /= 10, remainder in RDX
+    add dl, '0'     ; Convert remainder to ASCII
+    mov [rdi], dl   ; Store character
+    inc rdi         ; Move buffer pointer
+    inc rcx         ; Increase count
+    test rax, rax   ; Check if RAX is zero
+    jnz .reverse    ; Repeat if not zero
+
+    mov rdi, r8     ; Restore buffer pointer
+    add rdi, rcx    ; Move to end of string
+    mov byte [rdi], 0  ; Null-terminate
+    ret
+
+; Print string at RSI with length RDX
+print_str:
+    mov rax, 1      ; syscall: write
+    mov rdi, 1      ; file descriptor: stdout
+    syscall
+    ret
