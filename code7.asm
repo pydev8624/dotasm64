@@ -11,10 +11,14 @@ section .text
 _start:
     ; Increment num
     ;inc qword [num]
+    ; Decrement num
+    ;dec qword [num]
     
     mov rax,[num]
     ; increment rax
     inc rax
+    ; Decremeny rax
+    ;dec rax
     mov [num],rax
 
     ; Convert num to string
